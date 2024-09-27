@@ -21,6 +21,9 @@ class RestaurantsBloc extends Bloc<RestaurantsEvent, RestaurantsState> {
         restaurantResult.restaurants.clear();
         restaurantResult.restaurants.addAll(allRestaurants);
         emit(RestaurantsLoaded(restaurantResult));
+      } on DioError catch (e) {
+        final RestaurantResult restaurantResult = await databaseProvider.fetchRestaurants(offset: event.offset);
+        emit(RestaurantsLoaded(restaurantResult));
       } catch (e) {
         print(e);
         emit(RestaurantsError());
